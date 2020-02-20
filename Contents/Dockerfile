@@ -11,6 +11,10 @@ run wget https://download.oracle.com/otn_software/linux/instantclient/oracle-ins
 run wget https://download.oracle.com/otn_software/linux/instantclient/oracle-instantclient-sqlplus-linuxx64.rpm
 run rpm -ivh oracle-instantclient-basic*.rpm oracle-instantclient-sqlplus*.rpm
 
+run wget -o jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+run chmod +x ./jq
+run cp jq /usr/bin
+
 run echo $S3_SCRIPT_PATH
 run aws s3 cp $S3_SCRIPT_PATH command_to_execute.sh
 run sed -i 's/\r$//' command_to_execute.sh

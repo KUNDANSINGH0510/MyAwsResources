@@ -100,22 +100,40 @@ yum install cloud-guest-utils
 ping vlds648.netpost	->	10.123.178.32
 yum install telnet
 
+jdbc:oracle:thin:@//rds-mail-ds-euwe04-a2-001-cu2kuqoyaedy.eu-west-1.rds.amazonaws.com:1521/DMOMIG
 
+Install Docker- https://www.cyberciti.biz/faq/install-use-setup-docker-on-rhel7-centos7-linux/
 
+Secret of AWS Secrets Manager
+-------------------------------
+aws secretsmanager get-secret-value --region eu-west-1 --secret-id MyTestDatabaseSecret
+{
+  "ARN": "arn:aws:secretsmanager:us-west-2:123456789012:secret:MyTestDatabaseSecret-a1b2c3",
+  "Name": "MyTestDatabaseSecret",
+  "VersionId": "EXAMPLE1-90ab-cdef-fedc-ba987EXAMPLE",
+  "SecretString": "{\n  \"username\":\"david\",\n  \"password\":\"MyDBPassword\"\n}\n",
+  "CreatedDate": 1523477145.713
+}
 
+aws secretsmanager get-secret-value --region eu-west-1 --secret-id MyTestDatabaseSecret | jq --raw-output .SecretString | jq -r ."password"
+Output - MyDBPassword
 
+DBUSER = $(aws secretsmanager get-secret-value --region eu-west-1 --secret-id MyTestDatabaseSecret | jq --raw-output .SecretString | jq -r ."DBUSER")
+DBPASSWORD = $(aws secretsmanager get-secret-value --region eu-west-1 --secret-id MyTestDatabaseSecret | jq --raw-output .SecretString | jq -r ."DBPASSWORD")
+DB = $(aws secretsmanager get-secret-value --region eu-west-1 --secret-id MyTestDatabaseSecret | jq --raw-output .SecretString | jq -r ."DB")
 
+In Secret Manger- Secret is : MyTestDatabaseSecret
+Key				Value
+DBUSER			UserName
+DBPASSWORD		ThisIsMyPassword
+DB				rdi-mail-ds-euwe04-a2-001-cu2kuqoyaedy.eu-west-1.rds.amazonaws.com:1521/SSID
 
+sqlplus -s $DBUSER/$DBPASSWORD@$DB
 
-
-
-
-
-
-
-
-
-
-
-
+To install Jasonquery on Linux
+-------------------------------
+yum install -y rpm wget
+wget -o jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+chmod +x ./jq
+cp jq /usr/bin
 
